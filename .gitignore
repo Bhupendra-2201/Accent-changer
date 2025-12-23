@@ -1,0 +1,6 @@
+venv/*
+!venv/LangChain01.py
+!venv/requirements.txt
+.env
+__pycache__/
+*.pyc
