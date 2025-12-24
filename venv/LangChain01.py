@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI
 
 
 load_dotenv()
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
 
 if not OPENROUTER_API_KEY:
     raise ValueError("OpenRouter API key not found. Make sure OPENROUTER_API_KEY is set in your .env.")
