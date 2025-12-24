@@ -4,8 +4,6 @@ from langchain_openai import ChatOpenAI
 
 
 
-import httpx
-
 OPENROUTER_API_KEY ="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"
 print(OPENROUTER_API_KEY)
 
@@ -14,6 +12,10 @@ chat = ChatOpenAI(
     temperature=0.0,
     openai_api_key=OPENROUTER_API_KEY,
     base_url="https://openrouter.ai/api/v1",
+    default_headers={
+        "HTTP-Referer": "https://localhost:3000",
+        "X-Title": "TestApp"
+    }
 )
 
 customer_email = """    
