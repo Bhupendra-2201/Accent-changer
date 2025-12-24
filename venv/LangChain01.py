@@ -6,6 +6,9 @@ from langchain_openai import ChatOpenAI
 load_dotenv()
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY")
 
+print("Welcome to Accent Changer")
+print("Loading ...")
+
 if not OPENROUTER_API_KEY:
     raise ValueError("OpenRouter API key not found. Make sure OPENROUTER_API_KEY is set in your .env.")
 
