@@ -4,18 +4,23 @@ from langchain_openai import ChatOpenAI
 
 
 
-OPENROUTER_API_KEY ="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"
+import httpx
+
+OPENROUTER_API_KEY ="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"
 print(OPENROUTER_API_KEY)
+
+http_client = httpx.Client(
+    headers={
+        "HTTP-Referer": "https://localhost:3000",
+        "X-Title": "TestApp"
+    }
+)
 
 chat = ChatOpenAI(
     model="mistralai/mistral-7b-instruct:free",
     temperature=0.0,
     openai_api_key=OPENROUTER_API_KEY,
     base_url="https://openrouter.ai/api/v1",
-    default_headers={
-        "HTTP-Referer": "https://localhost:3000", # Required for OpenRouter free models
-        "X-Title": "TestApp"
-    }
 )
 
 customer_email = """    
