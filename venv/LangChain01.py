@@ -9,13 +9,6 @@ import httpx
 OPENROUTER_API_KEY ="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"
 print(OPENROUTER_API_KEY)
 
-http_client = httpx.Client(
-    headers={
-        "HTTP-Referer": "https://localhost:3000",
-        "X-Title": "TestApp"
-    }
-)
-
 chat = ChatOpenAI(
     model="mistralai/mistral-7b-instruct:free",
     temperature=0.0,
