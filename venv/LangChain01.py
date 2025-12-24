@@ -3,11 +3,9 @@ from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 
 
-load_dotenv()
-OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "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")
 
-if not OPENROUTER_API_KEY:
-    raise ValueError("OpenRouter API key not found. Make sure OPENROUTER_API_KEY is set in your .env.")
+OPENROUTER_API_KEY ="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"
+
 
 chat = ChatOpenAI(
     model="deepseek/deepseek-r1:free",      
@@ -16,7 +14,7 @@ chat = ChatOpenAI(
     openai_api_base="https://openrouter.ai/api/v1"
 )
 
-customer_email = """ 
+customer_email = """    
 Arre, I be fuming that me blender lid \
 flew off and splattered me kitchen walls \
 with smoothie! And to make matters worse, \
