@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Style Translator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+        
+        .subtitle {
+            color: #666;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            color: #333;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        
+        textarea, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        
+        textarea:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .result {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .result-text {
+            color: #555;
+            line-height: 1.6;
+            font-size: 1.1em;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .error {
+            background: #fee;
+            border-left-color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>✨ Text Style Translator</h1>
+        <p class="subtitle">Transform your text into any style using AI</p>
+        
+        <form id="translateForm">
+            <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea 
+                    id="message" 
+                    name="message" 
+                    placeholder="Enter the text you want to translate..."
+                    required
+                >Arre, I be fuming that me blender lid flew off and splattered me kitchen walls with smoothie!</textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="style">Target Style</label>
+                <select id="style" name="style">
+                    <option value="American English in a calm and respectful tone">Professional & Respectful</option>
+                    <option value="Professional business English">Business English</option>
+                    <option value="Casual friendly tone">Casual & Friendly</option>
+                    <option value="Formal academic English">Academic & Formal</option>
+                    <option value="British English with polite tone">British & Polite</option>
+                    <option value="Simple English for children">Simple (For Kids)</option>
+                    <option value="Poetic and eloquent style">Poetic & Eloquent</option>
+                </select>
+            </div>
+            
+            <button type="submit" id="submitBtn">
+                <span id="btnText">Translate Text</span>
+                <span id="btnLoading" class="loading hidden"></span>
+            </button>
+        </form>
+        
+        <div id="result" class="result hidden">
+            <h3>✅ Translation Result</h3>
+            <p class="result-text" id="resultText"></p>
+        </div>
+    </div>
+    
+    <script>
+        const form = document.getElementById('translateForm');
+        const result = document.getElementById('result');
+        const resultText = document.getElementById('resultText');
+        const submitBtn = document.getElementById('submitBtn');
+        const btnText = document.getElementById('btnText');
+        const btnLoading = document.getElementById('btnLoading');
+        
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const message = document.getElementById('message').value;
+            const style = document.getElementById('style').value;
+            
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.classList.add('hidden');
+            btnLoading.classList.remove('hidden');
+            result.classList.add('hidden');
+            
+            try {
+                const response = await fetch('http://localhost:8000/translate', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message, style })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    resultText.textContent = data.translated_message;
+                    result.classList.remove('error', 'hidden');
+                } else {
+                    throw new Error('Translation failed');
+                }
+            } catch (error) {
+                resultText.textContent = '❌ Error: Could not translate. Make sure the server is running at http://localhost:8000';
+                result.classList.add('error');
+                result.classList.remove('hidden');
+            } finally {
+                // Hide loading state
+                submitBtn.disabled = false;
+                btnText.classList.remove('hidden');
+                btnLoading.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
