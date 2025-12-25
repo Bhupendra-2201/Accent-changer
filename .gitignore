@@ -6,6 +6,6 @@ __pycache__/
 *.pyc
 *.log
 .DS_Store
-.USER_GUIDE.md
-.README.md
-.gitignore
+User_Guide.md
+README.md
+test_api.py
