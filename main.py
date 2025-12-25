@@ -68,6 +68,12 @@ async def serve_ui():
     """Serve the web interface"""
     return FileResponse("static/index.html")
 
+@app.get("/favicon.ico")
+async def favicon():
+    """Return empty response for favicon to prevent 404 errors"""
+    from fastapi.responses import Response
+    return Response(status_code=204)
+
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
     """Health check endpoint"""
